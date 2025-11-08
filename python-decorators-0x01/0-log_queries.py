@@ -1,20 +1,24 @@
-# Python Decorators Project
+import sqlite3
+import functools
 
-This folder contains Python scripts that demonstrate the use of decorators to enhance database operations such as logging, connection handling, transaction management, retries, and caching.
+def log_queries(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        query = kwargs.get('query') or (args[0] if args else None)
+        if query:
+            print(f"Executing SQL Query: {query}")
+        return func(*args, **kwargs)
+    return wrapper
 
-## Tasks
+@log_queries
+def fetch_all_users(query):
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    cursor.execute(query)
+    results = cursor.fetchall()
+    conn.close()
+    return results
 
-### 0. Log Queries
-- Decorator `log_queries` logs SQL queries before execution.
-
-### 1. Handle DB Connections
-- Decorator `with_db_connection` manages opening and closing connections.
-
-### 2. Transaction Management
-- Decorator `transactional` wraps operations in commit/rollback logic.
-
-### 3. Retry on Failure
-- Decorator `retry_on_failure` retries failed DB operations.
-
-### 4. Cache Queries
-- Decorator `cache_query` caches query results to avoid redundant calls.
+# Example usage
+users = fetch_all_users(query="SELECT * FROM users")
+print(users)
