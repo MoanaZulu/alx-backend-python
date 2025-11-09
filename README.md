@@ -1,24 +1,16 @@
-## Python Generators Project
+# ALX Backend Python
 
-This folder contains Python scripts that demonstrate advanced generator usage for streaming, batching, and aggregating data from a MySQL database.
+This repository contains backend projects for the ALX Software Engineering curriculum. Each folder focuses on a specific Python concept or backend skill, including:
 
-Tasks
+## Projects
 
-0. Stream Users
-- Generator function `stream_users()` yields rows one by one from `user_data`.
+- `python-generators-0x00`: Streaming, batching, and aggregating data using Python generators and MySQL.
+- `python-decorators-0x01`: Custom decorators and context managers for reusable Python logic.
+- `python-context-async-perations-0x02`: Async operations and context management with SQLite and concurrency tools.
 
-1. Batch Processing
-- `stream_users_in_batches(batch_size)` yields batches.
-- `batch_processing(batch_size)` filters users over age 25.
+## Setup
 
- 2. Lazy Pagination
-- `lazy_pagination(page_size)` simulates paginated data loading.
+Each folder includes its own `README.md`, task files, and setup instructions. Some projects require MySQL or SQLite.
 
- 4. Average Age
-- `stream_user_ages()` yields ages.
-- `calculate_average_age()` computes average without loading all data.
-
-Setup
-- Requires MySQL and `user_data.csv`
-- Run `seed.py` to create and populate the database
 Updated on November 9, 2025.
+
