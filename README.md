@@ -1,3 +1,10 @@
+
+
+# alx-backend-python
+
+This is the main repository for ALX backend Python projects. It contains multiple subfolders, each representing a different project or concept in backend development using Python.
+
+
 # ALX Backend Python
 
 This repository contains backend projects for the ALX Software Engineering curriculum. Each folder focuses on a specific Python concept or backend skill, including:
