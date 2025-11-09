@@ -21,3 +21,4 @@ Tasks
 Setup
 - Requires MySQL and `user_data.csv`
 - Run `seed.py` to create and populate the database
+Updated on November 9, 2025.
