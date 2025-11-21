@@ -1,15 +1,42 @@
-from django.shortcuts import render
+#!/usr/bin/env python3
+"""
+Viewsets for conversations and messages
+"""
 
-# Create your views here.
-
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .models import Message
-from .serializers import MessageSerializer
+from .models import Conversation, Message
+from .serializers import ConversationSerializer, MessageSerializer
 
-@api_view(['GET'])
-def message_list(request):
-    messages = Message.objects.all()
-    serializer = MessageSerializer(messages, many=True)
-    return Response(serializer.data)
+
+class ConversationViewSet(viewsets.ModelViewSet):
+    """ViewSet for listing and creating conversations"""
+
+    queryset = Conversation.objects.all()
+    serializer_class = ConversationSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["participants__email"]
+
+    def create(self, request, *args, **kwargs):
+        """Create a new conversation"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+    """ViewSet for listing and creating messages"""
+
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["message_body", "sender__email"]
+
+    def create(self, request, *args, **kwargs):
+        """Send a message to an existing conversation"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
