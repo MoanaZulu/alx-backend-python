@@ -56,3 +56,29 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [IsParticipantOfConversation]
+
+
+from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Conversation, Message
+from .serializers import ConversationSerializer, MessageSerializer
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Only return messages for conversations the user participates in
+        conversation_id = self.kwargs.get("conversation_id")
+        if conversation_id:
+            return Message.objects.filter(conversation_id=conversation_id, conversation__participants=self.request.user)
+        return Message.objects.none()
+
+    def perform_create(self, serializer):
+        conversation_id = self.kwargs.get("conversation_id")
+        conversation = Conversation.objects.filter(id=conversation_id, participants=self.request.user).first()
+        if not conversation:
+            return Response({"detail": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
+        serializer.save(conversation=conversation, sender=self.request.user)
