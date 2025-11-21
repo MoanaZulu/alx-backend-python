@@ -37,10 +37,11 @@ class TestGetJson(unittest.TestCase):
         ("http://holberton.io", {"payload": False}),
     ])
     def test_get_json(self, test_url, test_payload):
-        with patch('requests.get') as mock_get:
+        with patch('requests.get') as mock_get:  # <-- FIXED
             mock_get.return_value.json.return_value = test_payload
             self.assertEqual(get_json(test_url), test_payload)
             mock_get.assert_called_once_with(test_url)
+
 
 
 class TestMemoize(unittest.TestCase):
