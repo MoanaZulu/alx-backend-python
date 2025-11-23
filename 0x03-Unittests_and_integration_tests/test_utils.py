@@ -65,3 +65,25 @@ class TestMemoize(unittest.TestCase):
             self.assertEqual(result2, 42)
             mock_method.assert_called_once()
 
+
+class TestAccessNestedMap(unittest.TestCase):
+    def test_access_nested_map_0(self):
+        """Test that access_nested_map returns correct values for given inputs."""
+        # your test code here
+
+
+class TestAccessNestedMap(unittest.TestCase):
+    """Unit tests for access_nested_map function."""
+
+    def test_access_nested_map_0(self):
+        """Test that access_nested_map returns correct values for given inputs."""
+        # test code...
+
+
+
+with patch.object(
+    TestClass, "a_method", return_value=42
+) as mock_method:
+
+
+
