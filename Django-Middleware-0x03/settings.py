@@ -89,6 +89,12 @@ REST_FRAMEWORK = {
 }
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 294e229 (Configure RestrictAccessByTimeMiddleware in settings.py)
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -100,4 +106,7 @@ MIDDLEWARE = [
     "chats.middleware.RequestLoggingMiddleware",
     "chats.middleware.RestrictAccessByTimeMiddleware",  # <-- must be here
 ]
+<<<<<<< HEAD
 
+=======
+>>>>>>> 294e229 (Configure RestrictAccessByTimeMiddleware in settings.py)
