@@ -15,6 +15,7 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
+<<<<<<< HEAD
 Objective: Log when a user edits a message and save the old content before the edit.
 
 Instructions:
@@ -30,6 +31,9 @@ Repo:
 GitHub repository: alx-backend-python
 Directory: Django-signals_orm-0x04
 File: messaging/Models
+=======
+
+>>>>>>> c37a7ea (Add edited_at and edited_by fields to Message and MessageHistory)
 
 from django.db import models
 from django.contrib.auth.models import User
