@@ -109,3 +109,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     pagination_class = MessagePagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = MessageFilter
+
+
+from django.views.decorators.cache import cache_page
+
+@cache_page(60)
+def conversation_list(request):
+    messages = Message.objects.select_related("sender", "receiver").all()
+    return render(request, "chats/conversation_list.html", {"messages": messages})
