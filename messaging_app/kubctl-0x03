@@ -1,0 +1,30 @@
+#!/bin/bash
+# kubctl-0x03 - Perform rolling update of Django app to version 2.0
+
+set -e
+
+DEPLOYMENT_NAME="django-blue"
+NAMESPACE="default"
+SERVICE_NAME="django-service"
+
+echo "Applying updated deployment file..."
+kubectl apply -f messaging_app/blue_deployment.yaml
+
+echo "Triggering rolling update..."
+kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE
+
+# Get ClusterIP and port of the service
+CLUSTER_IP=$(kubectl get svc $SERVICE_NAME -n $NAMESPACE -o jsonpath='{.spec.clusterIP}')
+PORT=$(kubectl get svc $SERVICE_NAME -n $NAMESPACE -o jsonpath='{.spec.ports[0].port}')
+
+echo "Testing for downtime with curl..."
+for i in {1..20}
+do
+  curl -s http://$CLUSTER_IP:$PORT/ || echo "Request failed"
+  sleep 2
+done
+
+echo "Verifying pods after rolling update..."
+kubectl get pods -n $NAMESPACE
+
+echo "✅ Rolling update completed successfully!"
