@@ -1,3 +1,22 @@
+from django.http import HttpResponseForbidden
+
+class RolepermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Only allow admins or moderators
+        if request.user.is_authenticated:
+            if not (request.user.is_staff or getattr(request.user, 'role', '') == 'moderator'):
+                return HttpResponseForbidden("You do not have permission to access this resource.")
+        else:
+            return HttpResponseForbidden("You must be logged in to access this resource.")
+
+        response = self.get_response(request)
+        return response
+
+
+
 
 
 
