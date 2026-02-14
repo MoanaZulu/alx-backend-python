@@ -1,4 +1,5 @@
-
+'chats.middleware.RolepermissionMiddleware',
+x
 
 
 
