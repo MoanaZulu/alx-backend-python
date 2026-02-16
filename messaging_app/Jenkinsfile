@@ -2,6 +2,54 @@ pipeline {
     agent any
 
     environment {
+        GITHUB_CREDENTIALS = 'your-credential-id'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'master',
+                    credentialsId: "${env.GITHUB_CREDENTIALS}",
+                    url: 'https://github.com/yourusername/alx-backend-python.git'
+            }
+        }
+
+        stage('Setup Python') {
+            steps {
+                pythonEnv('Python 3') {
+                    sh 'pip install -r messaging_app/requirements.txt'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                pythonEnv('Python 3') {
+                    sh 'pytest --junitxml=report.xml'
+                }
+            }
+            post {
+                always {
+                    junit 'report.xml'
+                }
+            }
+        }
+    }
+
+    triggers {
+        // Manual trigger only
+    }
+}
+
+
+
+
+
+
+pipeline {
+    agent any
+
+    environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
         DOCKER_IMAGE = "${DOCKERHUB_CREDENTIALS_USR}/messaging_app:latest"
     }
@@ -29,6 +77,7 @@ pipeline {
                 }
             }
         }
+
     }
 
     post {
@@ -56,6 +105,60 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Pull code from GitHub
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install --upgrade pip
+                pip install -r messaging_app/requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Tests with Pytest') {
+            steps {
+                sh '''
+                . venv/bin/activate
+                pytest --junitxml=report.xml
+                '''
+            }
+        }
+
+        stage('Publish Test Report') {
+            steps {
+                junit 'report.xml'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
+    }
+}
+
+
+
+
+pipeline {
+    agent any
+
+    environment {
+        GITHUB_CREDENTIALS = credentials('github-creds')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
                 checkout scm
             }
         }
